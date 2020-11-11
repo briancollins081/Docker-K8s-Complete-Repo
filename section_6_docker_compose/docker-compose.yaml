@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  mongodb:
+    image: "mongo:bionic"
+    volumes:
+      - goals-data:/data/db
+    # environment:
+    #   #MONGODB_USERNAME:abc
+    #   - MONGODB_USERNAME=abc
+    #   - MONGODB_PASSWORD=password
+    env_file:
+      - ./env/mongo.env
+  backend:
+    build: ./backend
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    #   args:
+    #     arg1: value
+    ports:
+      - "8000:8000"
+    volumes:
+      - goals-backend-logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - mongodb
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+volumes:
+  goals-data:
+  goals-backend-logs:
