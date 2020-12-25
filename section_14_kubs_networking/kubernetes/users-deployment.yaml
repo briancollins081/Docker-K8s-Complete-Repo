@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multimg-users-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-api
+  template:
+    metadata:
+      labels:
+        app: users-api
+    spec:
+      containers:
+        - name: usersapi
+          image: briancollins081/multimg-users-api:latest
+          env:
+            - name: AUTH_HOST
+              # value: "10.97.5.57"
+              value: auth-service.default #Core DNS domain for pod to pod internal/cluster communication

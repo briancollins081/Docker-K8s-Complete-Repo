@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multimg-tasks-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasks-api
+  template:
+    metadata:
+      labels:
+        app: tasks-api
+    spec:
+      containers:
+        - name: tasksapi
+          image: briancollins081/multimg-tasks-api:latest
+          env:
+            - name: AUTH_HOST
+              value: auth-service.default #Core DNS domain for pod to pod internal/cluster communication servicename.namespace
+            - name: TASKS_FOLDER
+              value: tasks
